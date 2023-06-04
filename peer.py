@@ -275,6 +275,13 @@ class Peer:
                         should_exit = True
                     else:
                         print("You are currently in a group. Use !GROUP ALL to switch to all users. After that use !EXIT if you want.")
+                elif body_message.startswith("!PEERS"):
+                    # Se il messaggio inizia con !PEERS si stampa la lista dei peer
+                    active_peers = []
+                    for i in self.lista_peer:
+                        if bool(self.lista_peer[i]['is_active']) == True:
+                            active_peers.append(i)
+                    print(f'Active peers: {active_peers}')
                 elif body_message.startswith("!SELECT"):
                     # Se il messaggio inizia con !SELECT si seleziona un utente per la chat privata
                     selected_user = body_message.split(" ")[1]

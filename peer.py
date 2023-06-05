@@ -3,7 +3,6 @@ import os
 import sys
 import socket
 import threading
-import unittest
 from random import randint
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
@@ -11,15 +10,15 @@ import re
 
 
 class Peer:
-    def __init__(self):
+    def __init__(self, username, ip, port):
         self.lista_peer = {}
         self.file_path = self.verify_reachable_json()
         self.lock = threading.Lock()
         self.load_peers_from_json()
-        self.username = input("Username: ")
+        self.username = username
         self.username = self.verify_username(self.username)
-        self.ip = 'localhost'
-        self.port = self.verify_port_is_free(randint(1000, 9999))
+        self.ip = ip
+        self.port = self.verify_port_is_free(port)
         self.is_active = True
         self.public_key = self.import_key()
         self.cipher = PKCS1_OAEP.new(self.public_key)
@@ -210,8 +209,8 @@ class Peer:
             block = message[i:i + block_size]
             message_blocks.append(block)
         for i in range(len(message_blocks)):
-            message_blocks[i] = f'{str(i+1)}###{message_blocks[i]}'  # Aggiunge il numero del blocco al messaggio
-        message_blocks[0] = f'{message_blocks[0]}###{str(len(message_blocks))}' # Aggiunge il numero totale dei blocchi al primo blocco
+            message_blocks[i] = f'{str(i + 1)}###{message_blocks[i]}'  # Aggiunge il numero del blocco al messaggio
+        message_blocks[0] = f'{message_blocks[0]}###{str(len(message_blocks))}'  # Aggiunge il numero totale dei blocchi al primo blocco
         return message_blocks
 
     def handle_message_blocks(self, message_received):
@@ -246,7 +245,6 @@ class Peer:
                         self.lista_peer[received_username] = {'ip': message_received.split(":")[2],
                                                               'port': int(message_received.split(":")[3]),
                                                               'is_active': message_received.split(":")[4]}
-
                 elif message_received.startswith("NEW_GROUP_TAG"):
                     received_group = message_received.split(":")[1]
                     # Isolo la lista dei membri dalle parentesi quadre e la divido in base alle virgole
@@ -254,7 +252,6 @@ class Peer:
                     for i in range(len(received_members)):
                         received_members[i] = received_members[i].strip(" '")
                     self.lista_peer[received_group] = {'members': received_members}
-
                 elif message_received.startswith("!EXIT"):
                     msg = message_received.split(": ")[1]
                     print(msg)
@@ -295,7 +292,11 @@ class Peer:
                 elif body_message.startswith("!SELECT"):
                     # Se il messaggio inizia con !SELECT si seleziona un utente per la chat privata
                     selected_user = body_message.split(" ")[1]
-                    print(f"You have selected user: {selected_user}")
+                    if selected_user in self.lista_peer:
+                        print(f"You have selected user: {selected_user}")
+                    else:
+                        print(f"User '{selected_user}' does not exist")
+                        selected_user = None
                 elif body_message.startswith("!GROUP"):
                     # Se il messaggio inizia con !GROUP si seleziona un gruppo per la chat di gruppo
                     group_name = body_message.split(" ")[1]
@@ -314,12 +315,20 @@ class Peer:
                         print(f"Group '{group_name}' does not exist. Create a new group? (yes/no)")
                         choice = input("")
                         if choice.lower() == "yes":
-                            members = input("Enter group members separated by commas: ").split(",")
-                            self.create_group(group_name, members)
-                            selected_group = group_name
-                            print(f"Group '{group_name}' created with members: {members}")
-                            members.append(self.username)
-                            self.send_message_multicast(members, f"NEW_GROUP_TAG:{group_name}:{members}")
+                            members = input("Enter group members (excluding you) separated by commas: ").split(",")
+                            creation_failed = False
+                            # Controllo che tutti gli utenti inseriti esistano
+                            for member in members:
+                                if member not in self.lista_peer:
+                                    print(f"User '{member}' does not exist. Group not created.")
+                                    creation_failed = True
+                                    break
+                            if creation_failed == False:
+                                self.create_group(group_name, members)
+                                selected_group = group_name
+                                print(f"Group '{group_name}' created with members: {members}")
+                                members.append(self.username)
+                                self.send_message_multicast(members, f"NEW_GROUP_TAG:{group_name}:{members}")
                         else:
                             print("Group not created.")
                     selected_user = None
@@ -374,6 +383,7 @@ class Peer:
     def leave_chat(self):
         exit_message = f"!EXIT: {self.username} has left the chat"
         self.send_message_broadcast(exit_message)
+        self.is_active = False
         self.update_user_status(self.username, False)
 
     def send_message_broadcast(self, message):
@@ -381,14 +391,14 @@ class Peer:
         for user, user_data in self.lista_peer.items():
             if user != self.username and 'ip' in user_data and 'port' in user_data:
                 if bool(self.lista_peer[user]['is_active']):
-                # Si invia il messaggio a tutti gli utenti tranne se stessi
+                    # Si invia il messaggio a tutti gli utenti tranne se stessi
                     self.socket_message.sendto(message.encode('utf-8'), (user_data['ip'], user_data['port']))
 
     def send_message_unicast(self, user, message):
         message = self.encrypt(message)
         # Si invia il messaggio all'utente selezionato
         if bool(self.lista_peer[user]['is_active']):
-            self.socket_message.sendto(message.encode('utf-8'), (self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
+            self.socket_message.sendto(message.encode('utf-8'),(self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
 
     def send_message_multicast(self, utenti, message):
         message = self.encrypt(message)
@@ -396,15 +406,14 @@ class Peer:
         for user in utenti:
             if user != self.username:
                 if bool(self.lista_peer[user]['is_active']):
-                # Si invia il messaggio a tutti gli utenti del gruppo
+                    # Si invia il messaggio a tutti gli utenti del gruppo
                     group.append(user)
-                    self.socket_message.sendto(message.encode('utf-8'), (self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
+                    self.socket_message.sendto(message.encode('utf-8'),(self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
 
     def stop(self):
         # Si chiudono le connessioni e i socket
-        self.is_active = False
+        if self.is_active is True:
+            self.leave_chat()
         self.socket_peer.close()
         self.socket_message.close()
 
-
-Peer()

@@ -33,7 +33,7 @@ Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente
 
 ## Note
 
-- Il programma utilizza un file JSON `lista_peer.json`  e `backup_lista_peer.json` per memorizzare i dettagli dei peer, inclusi gli username, gli indirizzi IP, le porte e lo stato di attività.
+- Il programma utilizza un file JSON `lista_peer.json` per memorizzare i dettagli dei peer, inclusi gli username, gli indirizzi IP, le porte e lo stato di attività e ogni 10 peer si aggiorna un file di backup `backup_lista_peer.json`.
 - I messaggi vengono crittografati utilizzando la crittografia RSA. Viene generata una chiave RSA `key.pem` per ogni peer e viene utilizzata la crittografia PKCS1_OAEP.
 - I messaggi vengono divisi in blocchi di dimensioni massime di 150 caratteri per evitare problemi di lunghezza del messaggio cifrato.
 - Il programma tiene traccia dei peer attivi e li notifica agli altri peer appena si collegano.

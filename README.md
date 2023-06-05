@@ -33,10 +33,10 @@ Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente
 
 ## Note
 
-- Il programma utilizza un file JSON `lista_peer.json` per memorizzare i dettagli dei peer, inclusi gli username, gli indirizzi IP, le porte e lo stato di attività e ogni 10 peer si aggiorna un file di backup `backup_lista_peer.json`.
-- I messaggi vengono crittografati utilizzando la crittografia RSA. Viene generata una chiave RSA `key.pem` per ogni peer e viene utilizzata la crittografia PKCS1_OAEP.
-- I messaggi vengono divisi in blocchi di dimensioni massime di 150 caratteri per evitare problemi di lunghezza del messaggio cifrato.
+- Il programma utilizza un file JSON `lista_peer.json` per memorizzare i dettagli dei peer, inclusi gli username, gli indirizzi IP, le porte e lo stato di attività di ognuno e ogni 10 peer si aggiorna un file di backup `backup_lista_peer.json`. Il file permette anche di memorizzare i dettagli degli insiemi di utenti che appartengono ad una stessa chat di gruppo memorizzando il nome e i membri del gruppo stesso.
+- I messaggi vengono crittografati utilizzando la crittografia RSA, in particolare il cifrario asimettrico PKCS1_OAEP. Il primo peer che crea la rete genera e salva una chiave RSA nel file `key.pem` che viene poi richiamato da tutti i membri della rete per criptare e decriptare i messaggi scambiati.
+- I messaggi vengono divisi in blocchi di dimensioni massime di 150 caratteri in input (le intestazioni predefinite per le varie tipologie di messaggio non rientrano nel computo dei 150) per evitare problemi di lunghezza del messaggio cifrato.
 - Il programma tiene traccia dei peer attivi e li notifica agli altri peer appena si collegano.
-- È possibile creare gruppi di utenti per la chat di gruppo. I gruppi possono essere creati solo con un numero ridotto di membri a causa della limitazione di lunghezza dei blocchi.
+- È possibile creare gruppi di utenti per la chat di gruppo. I gruppi possono essere creati solo con un numero ridotto di membri a causa della limitazione di lunghezza dei blocchi di caratteri in quanto la stringa contenente i membri del gruppo è inviata a tutti i membri come un messaggio.
 
 

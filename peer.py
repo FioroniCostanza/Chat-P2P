@@ -1,9 +1,9 @@
 import json
 import os
 import sys
-import signal
 import socket
 import threading
+import unittest
 from random import randint
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
@@ -11,15 +11,16 @@ import re
 
 
 class Peer:
-    def __init__(self, username, ip, port, status):
+    def __init__(self):
         self.lista_peer = {}
         self.file_path = self.verify_reachable_json()
         self.lock = threading.Lock()
         self.load_peers_from_json()
-        self.username = self.verify_username(username)
-        self.ip = ip
-        self.port = self.verify_port_is_free(port)
-        self.is_active = status
+        self.username = input("Username: ")
+        self.username = self.verify_username(self.username)
+        self.ip = 'localhost'
+        self.port = self.verify_port_is_free(randint(1000, 9999))
+        self.is_active = True
         self.public_key = self.import_key()
         self.cipher = PKCS1_OAEP.new(self.public_key)
 
@@ -184,10 +185,10 @@ class Peer:
         finally:
             self.lock.release()
 
-    def remove_group(self, group_name):
-        # Si rimuove il gruppo dalla lista dei peer
-        if group_name in self.lista_peer:
-            del self.lista_peer[group_name]
+    def remove_group(self, name):
+        # Si rimuove un utente o un gruppo dalla lista dei peer
+        if name in self.lista_peer[name]:
+            del self.lista_peer[name]
             self.lock.acquire()
             try:
                 with open(self.file_path, 'w') as file:
@@ -231,7 +232,7 @@ class Peer:
 
     def receive_message(self):
         # Metodo di ricezione messaggi
-        while is_active:
+        while self.is_active:
             try:
                 # Si riceve il messaggio e lo si decripta
                 message_received, address = self.socket_peer.recvfrom(1024)
@@ -245,6 +246,15 @@ class Peer:
                         self.lista_peer[received_username] = {'ip': message_received.split(":")[2],
                                                               'port': int(message_received.split(":")[3]),
                                                               'is_active': message_received.split(":")[4]}
+
+                elif message_received.startswith("NEW_GROUP_TAG"):
+                    received_group = message_received.split(":")[1]
+                    # Isolo la lista dei membri dalle parentesi quadre e la divido in base alle virgole
+                    received_members = message_received.split(":")[2].strip('[').strip(']').split(',')
+                    for i in range(len(received_members)):
+                        received_members[i] = received_members[i].strip(" '")
+                    self.lista_peer[received_group] = {'members': received_members}
+
                 elif message_received.startswith("!EXIT"):
                     msg = message_received.split(": ")[1]
                     print(msg)
@@ -255,14 +265,14 @@ class Peer:
                         # Se il messaggio è completo si stampa a video
                         print(msg)
             except Exception as e:
-                print("Connection lost.")
+                print(f"Connection lost in receiving message: {e}")
                 break
 
     def send_messages(self):
         selected_user = None  # Utente selezionato per la chat privata
         selected_group = None  # Gruppo selezionato per la chat di gruppo
         should_exit = False  # Variabile che indica se l'utente vuole uscire dal programma
-        while is_active and not should_exit:
+        while self.is_active and not should_exit:
             try:
                 message_sent = input("")  # Messaggio da inviare
                 message_sent = self.split_message_into_blocks(message_sent)  # Si divide il messaggio in blocchi
@@ -308,14 +318,16 @@ class Peer:
                             self.create_group(group_name, members)
                             selected_group = group_name
                             print(f"Group '{group_name}' created with members: {members}")
+                            members.append(self.username)
+                            self.send_message_multicast(members, f"NEW_GROUP_TAG:{group_name}:{members}")
                         else:
                             print("Group not created.")
                     selected_user = None
                 elif body_message.startswith("!REMOVE"):
-                    # Se il messaggio inizia con !REMOVE si rimuove un gruppo
-                    group_name = body_message.split(" ")[1]
-                    self.remove_group(group_name)
-                    print(f"Group '{group_name}' has been removed.")
+                    # Se il messaggio inizia con !REMOVE si rimuove un utente/gruppo
+                    name = body_message.split(" ")[1]
+                    self.remove_group(name)
+                    print(f"'{name}' has been removed.")
                     selected_group = None
                 elif selected_user is not None:
                     # Se è stato selezionato un utente si invia un messaggio privato
@@ -333,7 +345,7 @@ class Peer:
                     for i in range(len(message_sent)):
                         self.send_message_broadcast(f'{self.username}: {message_sent[i]}')
             except Exception as e:
-                print("Connection lost.")
+                print(f"Connection lost in sending message: {e}")
                 break
 
     def encrypt(self, msg):
@@ -368,23 +380,25 @@ class Peer:
         message = self.encrypt(message)  # Si cifra il messaggio
         for user, user_data in self.lista_peer.items():
             if user != self.username and 'ip' in user_data and 'port' in user_data:
+                if bool(self.lista_peer[user]['is_active']):
                 # Si invia il messaggio a tutti gli utenti tranne se stessi
-                self.socket_message.sendto(message.encode('utf-8'), (user_data['ip'], user_data['port']))
-        if self.username not in self.lista_peer:
-            print(f"You ({self.username}): {message}")
+                    self.socket_message.sendto(message.encode('utf-8'), (user_data['ip'], user_data['port']))
 
     def send_message_unicast(self, user, message):
         message = self.encrypt(message)
         # Si invia il messaggio all'utente selezionato
-        self.socket_message.sendto(message.encode('utf-8'), (self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
+        if bool(self.lista_peer[user]['is_active']):
+            self.socket_message.sendto(message.encode('utf-8'), (self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
 
     def send_message_multicast(self, utenti, message):
         message = self.encrypt(message)
         group = []
         for user in utenti:
-            # Si invia il messaggio a tutti gli utenti del gruppo
-            group.append(user)
-            self.socket_message.sendto(message.encode('utf-8'), (self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
+            if user != self.username:
+                if bool(self.lista_peer[user]['is_active']):
+                # Si invia il messaggio a tutti gli utenti del gruppo
+                    group.append(user)
+                    self.socket_message.sendto(message.encode('utf-8'), (self.lista_peer[user]['ip'], self.lista_peer[user]['port']))
 
     def stop(self):
         # Si chiudono le connessioni e i socket
@@ -393,26 +407,4 @@ class Peer:
         self.socket_message.close()
 
 
-username = input("Username: ")
-ip = "localhost"
-port = randint(1000, 9999)
-is_active = True
-
-
-def handler(signum, frame):
-    with open("lista_peer.json") as f:
-        data = json.load(f)
-        print(len(data))
-        if len(data) == 1:
-            os.remove("lista_peer.json")
-        else:
-            del data[username]
-        f.close()
-    if os.path.exists("lista_peer.json"):
-        with open("lista_peer.json", "w") as f:
-            json.dump(data, f)
-    print(f'{username} has been removed')
-    sys.exit()
-
-signal.signal(signal.SIGINT, handler)
-Peer(username, ip, port, is_active)
+Peer()

@@ -31,20 +31,6 @@ Per inviare un messaggio, l'utente può semplicemente digitare il testo del mess
 
 Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 
-## Esempio
-
-- Peer: Marco
-![Senza nome 2](https://github.com/FioroniCostanza/Chat-P2P/assets/117634064/2752977a-4d1a-4931-9d8e-bcfeeb32465c)
-
-- Peer: Alessio
-![Senza nome 3](https://github.com/FioroniCostanza/Chat-P2P/assets/117634064/b9b9004c-10f3-4594-b8cb-2ed5d556d7e4)
-
-- Peer: Luca
-![Senza nome 4](https://github.com/FioroniCostanza/Chat-P2P/assets/117634064/c25d7375-8117-46eb-82e8-1770976191f3)
-
-- Peer: Francesca
-![Senza nome 5](https://github.com/FioroniCostanza/Chat-P2P/assets/117634064/80dc3342-13c8-4b93-879b-f51340b3004e)
-
 ## Note
 
 - Il programma utilizza un file JSON `lista_peer.json` per memorizzare i dettagli dei peer, inclusi gli username, gli indirizzi IP, le porte e lo stato di attività e ogni 10 peer si aggiorna un file di backup `backup_lista_peer.json`.

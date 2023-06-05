@@ -1,4 +1,4 @@
-from peer_groups import Peer
+from peer import Peer
 from random import randint
 
 if __name__ == "__main__":

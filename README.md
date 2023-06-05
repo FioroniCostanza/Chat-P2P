@@ -16,8 +16,7 @@ Questo è un programma di chat peer-to-peer scritto in Python. Consente agli ute
 
 ## Requisiti
 
-- Python 3.x
-- Libreria `pycryptodome` per la crittografia dei messaggi: `pip install pycryptodome`
+- Per i dettagli: requirements.txt
 
 ## Utilizzo
 

@@ -1,18 +1,58 @@
 # Peer-to-Peer Chat 
 
-Questo è un programma di chat peer-to-peer scritto in Python. Consente agli utenti di comunicare tra loro attraverso una rete locale utilizzando il protocollo UDP.
+Questo è un programma di chat peer-to-peer scritto in Python. L'obiettivo principale del programma è consentire agli utenti di comunicare tra loro attraverso una rete locale utilizzando il protocollo UDP. Il programma offre una serie di funzionalità che permettono agli utenti di inviare e ricevere messaggi, creare gruppi di chat e gestire la connettività degli utenti.
 
 ## Funzionalità principali
 
-- Creazione di un nuovo utente con username, indirizzo IP e numero di porta.
-- Verifica della disponibilità dell'username e della porta.
-- Salvataggio dei dati degli utenti in un file JSON.
-- Crittografia dei messaggi utilizzando una chiave RSA.
-- Invio di messaggi broadcast a tutti gli utenti connessi.
-- Invio di messaggi privati a un utente specifico.
-- Creazione di gruppi di chat e invio di messaggi a tutti i membri del gruppo.
-- Gestione della disconnessione degli utenti.
-- Ripristino dei dati utente da un file di backup JSON in caso di perdita del file principale.
+Di seguito sono elencate le funzionalità principali del programma di chat peer-to-peer:
+
+### 1. Creazione di un nuovo utente
+
+Il programma consente agli utenti di creare un nuovo account specificando un username, un indirizzo IP e un numero di porta. Questi dettagli sono salvati in un file JSON per la gestione degli utenti.
+
+### 2. Verifica dell'username e della porta
+
+Prima di creare un nuovo utente, il programma verifica la disponibilità dell'username e della porta specificati. Se l'username o la porta sono già utilizzati da un altro utente, viene richiesto all'utente di scegliere un nuovo username o di riutilizzare l'username esistente.
+
+### 3. Salvataggio dei dati degli utenti
+
+I dati degli utenti, inclusi gli username, gli indirizzi IP, i numeri di porta e lo stato di attività di ogni utente, vengono salvati in un file JSON chiamato `lista_peer.json`. Questo file serve come database per mantenere i dettagli degli utenti e viene utilizzato per la gestione delle connessioni degli utenti.
+```  
+[
+   {
+
+      "Marco": {
+        "ip": "localhost", 
+        "port": 6744, 
+        "is_active": true
+      }, 
+     "Alessio": {
+        "ip": "localhost", 
+        "port": 1855, 
+        "is_active": true
+      }
+   }
+]
+```
+### 4. Crittografia dei messaggi
+
+Il programma utilizza la crittografia RSA per garantire la sicurezza dei messaggi scambiati tra gli utenti. Quando un utente invia un messaggio, viene utilizzata una chiave RSA per crittografare il contenuto del messaggio. Solo il destinatario designato può decriptare e leggere il messaggio utilizzando la chiave corrispondente.
+
+### 5. Messaggi broadcast
+
+Gli utenti possono inviare messaggi broadcast che vengono recapitati a tutti gli utenti connessi nella rete locale. Questo permette di comunicare con tutti gli utenti contemporaneamente senza dover inviare messaggi individuali.
+
+### 6. Messaggi privati
+
+Oltre ai messaggi broadcast, gli utenti possono inviare messaggi privati direttamente a un utente specifico. Questi messaggi sono visibili solo al destinatario e offrono un'opzione per le comunicazioni private tra due utenti.
+
+### 7. Gruppi di chat
+
+Il programma permette agli utenti di creare gruppi di chat, in cui più utenti possono partecipare e comunicare tra loro. Gli utenti possono inviare messaggi a tutti i membri del gruppo in modo da facilitare le discussioni di gruppo.
+
+### 8. Gestione della disconnessione
+
+Il programma gestisce la disconnessione degli utenti in modo robusto. Quando un utente si disconnette, gli altri utenti vengono notificati della sua disconnessione. Inoltre, i dati degli utenti vengono salvati in un file di backup JSON `backup_lista_peer.json` per poter essere ripristinati in caso di perdita del file principale.
 
 ## Requisiti
 
@@ -20,7 +60,11 @@ Questo è un programma di chat peer-to-peer scritto in Python. Consente agli ute
 
 ## Utilizzo
 
-Per avviare il programma, eseguire:
+Per avviare il programma, seguire i passaggi seguenti:
+
+1. Aprire un terminale o una finestra della riga di comando.
+2. Navigare nella directory in cui è presente il file "main.py".
+3. Eseguire il seguente comando:
 ``` 
 python3 main.py
 ```
@@ -35,7 +79,11 @@ Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente
 
 ## Test
 
-Per avviare la suite di test, eseguire da terminale il seguente comando: 
+Per verificare il corretto funzionamento del programma, è possibile eseguire una suite di test inclusa nel programma. Per avviare la suite di test, seguire i passaggi seguenti:
+
+1. Aprire un terminale o una finestra della riga di comando.
+2. Navigare nella directory in cui è presente il file `test.py`.
+3. Eseguire il seguente comando:
 ``` 
 pytest test.py
 ```

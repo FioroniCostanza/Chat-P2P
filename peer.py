@@ -71,7 +71,6 @@ class Peer:
                 print(f"Username '{user}' already exists but is inactive.")
                 choice = input("Do you want to reactivate it? (yes/no): ")
                 if choice.lower() == "yes":
-                    self.lista_peer[user]['is_active'] = True
                     self.update_user_status(user, True)  # Aggiorna lo stato dell'utente nel file JSON
                     return user
                 else:
@@ -81,18 +80,29 @@ class Peer:
             return user
 
     def verify_port_is_free(self, port):
-        # Si verifica che la porta non sia già presente nella lista dei peer
-        for user, user_data in self.lista_peer.items():
-            if 'port' in user_data and user_data['port'] == port:
-                print(f"Port {user} busy. Generating new port...")
-                new_value = randint(1000, 9999)
-                return self.verify_port_is_free(new_value)
-        return port
+        if os.path.exists(self.file_path):
+            with self.lock:
+                # Si verifica se esiste già una chiave associata all'username nel file JSON
+                with open(self.file_path, 'r') as file:
+                    data = json.load(file)
+                    file.close()
+                if self.username in data:
+                    return int(data[self.username]['port'])
+                else:
+                    # Altrimenti si verifica che la porta non sia già presente nella lista dei peer
+                    for user, user_data in self.lista_peer.items():
+                        if 'port' in user_data and user_data['port'] == port:
+                            print(f"Port {user} busy. Generating new port...")
+                            new_value = randint(1000, 9999)
+                            return self.verify_port_is_free(new_value)
+                    return port
+        else:
+            return port
+
 
     def import_key(self):
         # Si verifica se esiste già una chiave RSA
-        self.lock.acquire()
-        try:
+        with self.lock:
             if os.path.exists('key.pem'):
                 with open('key.pem', 'rb') as f:
                     key_data = f.read()
@@ -105,12 +115,9 @@ class Peer:
                     f.write(key.exportKey('PEM'))
                     f.close()
                 return key
-        finally:
-            self.lock.release()
 
     def load_peers_from_json(self):
-        self.lock.acquire()
-        try:
+        with self.lock:
             # Si verifica se esiste già un file JSON
             if os.path.exists(self.file_path):
                 # Se esiste si carica il file JSON e si salvano i dati nella variabile lista_peer
@@ -128,14 +135,11 @@ class Peer:
                                 'is_active': user_data['is_active']
                             }
                     file.close()
-        finally:
-            self.lock.release()
 
     def add_peer_to_json(self):
         # Se l'utente ancora non è nella lista dei peer, lo si aggiunge
         if self.username not in self.lista_peer.keys():
-            self.lock.acquire()
-            try:
+            with self.lock:
                 self.lista_peer[self.username] = {'ip': self.ip, 'port': self.port, 'is_active': self.is_active}
                 with open(self.file_path, 'w') as file:
                     json.dump(self.lista_peer, file)
@@ -153,12 +157,9 @@ class Peer:
                         with open(path, 'x') as file:
                             json.dump(self.lista_peer, file)
                             file.close()
-            finally:
-                self.lock.release()
 
     def update_user_status(self, username, is_active):
-        self.lock.acquire()
-        try:
+        with self.lock:
             # Aggiorna lo stato del peer nel programma e nel file JSON
             with open(self.file_path, "r") as file:
                 data = json.load(file)
@@ -169,31 +170,23 @@ class Peer:
                 file.close()
             if username in self.lista_peer:
                 self.lista_peer[username]['is_active'] = is_active
-        finally:
-            self.lock.release()
 
     def create_group(self, group_name, group_members):
         # Si aggiunge il gruppo alla lista dei peer
         self.lista_peer[group_name] = {'members': group_members}
-        self.lock.acquire()
-        try:
+        with self.lock:
             with open(self.file_path, 'w') as file:
                 json.dump(self.lista_peer, file)
                 file.close()
-        finally:
-            self.lock.release()
 
     def remove_group(self, name):
         # Si rimuove un utente o un gruppo dalla lista dei peer
         if name in self.lista_peer[name]:
             del self.lista_peer[name]
-            self.lock.acquire()
-            try:
+            with self.lock:
                 with open(self.file_path, 'w') as file:
                     json.dump(self.lista_peer, file)
                     file.close()
-            finally:
-                self.lock.release()
 
     def notify_new_peers(self):
         # Si invia un messaggio broadcast per notificare la presenza di un nuovo peer
@@ -297,13 +290,14 @@ class Peer:
                     print("!PEERS: show active peers")
                     print("!SELECT <username>: select a user for private chat")
                     print("!GROUP <group_name>: select (or create) a group for group chat")
+                    print("!GROUP ALL: switch to all users chat")
                     print("!REMOVE <group_name>: delete a group")
                     print("!EXIT: exit from the program")
                 elif body_message.startswith("!SELECT"):
                     # Se il messaggio inizia con !SELECT si seleziona un utente per la chat privata
                     selected_user = body_message.split(" ")[1]
                     if selected_user in self.lista_peer:
-                        print(f"You have selected user: {selected_user}")
+                        print(f"You have selected user: '{selected_user}'")
                     else:
                         print(f"User '{selected_user}' does not exist")
                         selected_user = None
@@ -399,6 +393,7 @@ class Peer:
     def send_message_broadcast(self, message):
         message = self.encrypt(message)  # Si cifra il messaggio
         for user, user_data in self.lista_peer.items():
+            # Si invia il messaggio a tutti gli utenti tranne a se stessi e ai gruppi
             if user != self.username and 'ip' in user_data and 'port' in user_data:
                 if bool(self.lista_peer[user]['is_active']):
                     # Si invia il messaggio a tutti gli utenti tranne se stessi
@@ -426,4 +421,3 @@ class Peer:
             self.leave_chat()
         self.socket_peer.close()
         self.socket_message.close()
-

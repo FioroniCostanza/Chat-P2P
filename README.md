@@ -123,4 +123,19 @@ pytest test.py
 - Il programma tiene traccia dei peer attivi e li notifica agli altri peer appena si collegano.
 - È possibile creare gruppi di utenti per la chat di gruppo. I gruppi possono essere creati solo con un numero ridotto di membri a causa della limitazione di lunghezza dei blocchi di caratteri in quanto la stringa contenente i membri del gruppo è inviata a tutti i membri come un messaggio.
 
+## Miglioramenti futuri
 
+### Sicurezza avanzata
+
+- Utilizzo di una chiave simmetrica per la crittografia dei messaggi: Invece di utilizzare una chiave RSA unica per crittografare i messaggi, si può generare una chiave simmetrica casuale per ciascuna comunicazione tra due peer. Questa chiave simmetrica può essere utilizzata per crittografare e decriptare i messaggi scambiati tra i due peer. In questo modo, ogni comunicazione avrà una chiave di crittografia diversa, migliorando la sicurezza complessiva del sistema.
+- Scambio sicuro delle chiavi simmetriche: Per consentire ai peer di scambiarsi le chiavi simmetriche in modo sicuro, si può utilizzare un protocollo di scambio delle chiavi sicuro, come il protocollo Diffie-Hellman o il protocollo di scambio delle chiavi Elliptic Curve Diffie-Hellman (ECDH). Questi protocolli consentono ai peer di stabilire una chiave segreta condivisa senza dover trasmettere direttamente la chiave tramite la rete.
+- Rotazione periodica delle chiavi simmetriche: Per aumentare la sicurezza delle comunicazioni nel tempo, si può implementare una rotazione periodica delle chiavi simmetriche. Ad esempio, si definisce una durata di validità per ogni chiave simmetrica e, dopo un determinato periodo, generare una nuova chiave e utilizzarla per le comunicazioni successive. In questo modo, anche se una chiave viene compromessa, l'impatto sarà limitato al periodo di validità di quella chiave.
+- Implementazione di meccanismi di autenticazione: Oltre alla crittografia dei messaggi, si può considerare l'implementazione di meccanismi di autenticazione per garantire che i messaggi siano inviati e ricevuti solo da peer legittimi. Si possono utilizzare firme digitali basate su algoritmi di crittografia asimmetrica per garantire l'integrità e l'autenticità dei messaggi.
+
+### Gestione della scalabilità
+
+Gli alberi AVL (Adelson-Velsky e Landis) potrebbero essere una strategia efficace per migliorare la gestione della scalabilità in questo programma:
+- Struttura dati per i peer: Ogni peer può essere rappresentato come un nodo nell'albero, con le informazioni pertinenti come l'indirizzo IP, la porta e lo stato di attività associate al nodo. L'uso di un albero AVL garantisce che l'albero sia bilanciato, il che porta a tempi di ricerca efficienti e riduce la possibilità di congestionamento.
+- Inserimento e rimozione dei peer: Quando un nuovo peer si connette o un peer esistente viene disconnesso, vengono eseguite le operazioni di inserimento o rimozione direttamente nell'albero AVL. L'albero si adatterà automaticamente per mantenere il bilanciamento, garantendo prestazioni ottimali anche con un grande numero di peer.
+- Ricerca e gestione dei peer: Si possono utilizzare le operazioni di ricerca dell'albero AVL per trovare rapidamente le informazioni di un peer specifico. Ad esempio, se si ha bisogno di recuperare le informazioni di un peer dato il suo indirizzo IP, è possibile eseguire una ricerca nell'albero AVL in tempo logaritmico, ottenendo così un accesso rapido alle informazioni desiderate.
+- Bilanciamento automatico: Gli alberi AVL si auto-bilanciano automaticamente dopo ogni operazione di inserimento o rimozione. Ciò garantisce che l'albero mantenga un'altezza bilanciata e che le operazioni di ricerca e aggiornamento siano efficienti, indipendentemente dal numero di peer connessi.

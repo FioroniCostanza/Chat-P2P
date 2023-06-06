@@ -107,7 +107,7 @@ In caso di necessità l'utente può visualizzare quando desidera l'elenco di que
 
 ## Test
 
-Per verificare il corretto funzionamento del programma, è possibile eseguire una suite di test inclusa nel programma. Per avviare la suite di test, seguire i passaggi seguenti:
+Per verificare il corretto funzionamento del programma, è possibile eseguire una suite di test (10 test che verificano le performance del programma) inclusa nel programma. Per avviare la suite di test, seguire i passaggi seguenti:
 
 1. Aprire un terminale o una finestra della riga di comando.
 2. Navigare nella directory in cui è presente il file `test.py`.

@@ -256,7 +256,7 @@ class Peer:
                         # Se il messaggio è completo si stampa a video
                         print(msg)
             except Exception as e:
-                print(f"Connection lost in receiving message: {e}")
+                print("Connection lost")
                 break
 
     def send_messages(self):
@@ -359,7 +359,7 @@ class Peer:
                     for i in range(len(message_sent)):
                         self.send_message_broadcast(f'{self.username}: {message_sent[i]}')
             except Exception as e:
-                print(f"Connection lost in sending message: {e}")
+                print("Connection lost")
                 break
 
     def encrypt(self, msg):

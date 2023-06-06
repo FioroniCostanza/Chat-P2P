@@ -12,7 +12,7 @@ Il programma consente agli utenti di creare un nuovo account specificando un use
 
 ### 2. Verifica dell'username e della porta
 
-Prima di creare un nuovo utente, il programma verifica la disponibilità dell'username e della porta specificati. Se l'username o la porta sono già utilizzati da un altro utente, viene richiesto all'utente di scegliere un nuovo username o di riutilizzare l'username esistente.
+Prima di creare un nuovo utente, il programma verifica la disponibilità dell'username e della porta specificati. Se l'username o la porta sono già utilizzati da un altro utente, viene richiesto all'utente di scegliere un nuovo username o di riutilizzare l'username esistente se disconnesso.
 
 ### 3. Salvataggio dei dati degli utenti
 
@@ -21,12 +21,14 @@ I dati degli utenti, inclusi gli username, gli indirizzi IP, i numeri di porta e
 [
    {
 
-      "Marco": {
+      "Marco": 
+      {
         "ip": "localhost", 
         "port": 6744, 
         "is_active": true
       }, 
-     "Alessio": {
+     "Alessio": 
+     {
         "ip": "localhost", 
         "port": 1855, 
         "is_active": true
@@ -48,8 +50,32 @@ Oltre ai messaggi broadcast, gli utenti possono inviare messaggi privati diretta
 
 ### 7. Gruppi di chat
 
-Il programma permette agli utenti di creare gruppi di chat, in cui più utenti possono partecipare e comunicare tra loro. Gli utenti possono inviare messaggi a tutti i membri del gruppo in modo da facilitare le discussioni di gruppo.
-
+Il programma permette agli utenti di creare gruppi di chat, in cui più utenti possono partecipare e comunicare tra loro. Gli utenti possono inviare messaggi a tutti i membri del gruppo in modo da facilitare le discussioni di gruppo. I dati relativi ai gruppi e ai membri del gruppo vengono salvati sempre all'interno del file JSON chiamato `lista_peer.json`.
+```  
+[
+   {
+      "Calcetto":
+      {
+         "members": 
+         [
+           "Michele", 
+           "Francesco", 
+           "Giulio"
+         ]
+      },
+      "Vacanze":
+      {
+         "members": 
+         [
+           "Federico", 
+           "Emma", 
+           "Lucia",
+           "Riccardo"
+         ]
+      }
+   }
+]
+```
 ### 8. Gestione della disconnessione
 
 Il programma gestisce la disconnessione degli utenti in modo robusto. Quando un utente si disconnette, gli altri utenti vengono notificati della sua disconnessione. Inoltre, i dati degli utenti vengono salvati in un file di backup JSON `backup_lista_peer.json` per poter essere ripristinati in caso di perdita del file principale.
@@ -73,7 +99,7 @@ Al primo avvio, il programma chiederà all'utente di inserire un username. Se l'
 
 Una volta avviato, il programma avvia due thread separati: uno per la ricezione dei messaggi e l'altro per l'invio dei messaggi.
 
-Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. È possibile inoltre rimuovere utenti o gruppi tramite il comando `!REMOVE`.
+Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. Digitando il comando `!PEERS` è possibile visualizzare tutti i peers attivi in quel momento. È possibile inoltre rimuovere utenti o gruppi tramite il comando `!REMOVE`.
 
 Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 

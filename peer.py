@@ -287,7 +287,7 @@ class Peer:
                     # Se il messaggio inizia con !PEERS si stampa la lista dei peer attivi
                     active_peers = []
                     for user, user_data in self.lista_peer.items():
-                        if user != self.username and 'ip' in user_data and 'port' in user_data:
+                        if user != self.username and 'is_active' in user_data:
                             if bool(self.lista_peer[user]['is_active']):
                                 active_peers.append(user)
                     print(f'Active peers (excluding you): {active_peers}')

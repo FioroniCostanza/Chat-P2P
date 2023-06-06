@@ -15,8 +15,7 @@ class Peer:
         self.file_path = self.verify_reachable_json()
         self.lock = threading.Lock()
         self.load_peers_from_json()
-        self.username = username
-        self.username = self.verify_username(self.username)
+        self.username = self.verify_username(username)
         self.ip = ip
         self.port = self.verify_port_is_free(port)
         self.is_active = True

@@ -2,6 +2,10 @@
 
 Questo è un programma di chat peer-to-peer scritto in Python. L'obiettivo principale del programma è consentire agli utenti di comunicare tra loro attraverso una rete locale utilizzando il protocollo UDP. Il programma offre una serie di funzionalità che permettono agli utenti di inviare e ricevere messaggi, creare gruppi di chat e gestire la connettività degli utenti.
 
+## Requisiti
+
+- Per i dettagli: requirements.txt
+
 ## Funzionalità principali
 
 Di seguito sono elencate le funzionalità principali del programma di chat peer-to-peer:
@@ -80,10 +84,6 @@ Il programma permette agli utenti di creare gruppi di chat, in cui più utenti p
 
 Il programma gestisce la disconnessione degli utenti in modo robusto. Quando un utente si disconnette, gli altri utenti vengono notificati della sua disconnessione. Inoltre, ogni 10 peers i dati degli utenti vengono salvati in un file di backup JSON `backup_lista_peer.json` per poter essere ripristinati in caso di perdita del file principale.
 
-## Requisiti
-
-- Per i dettagli: requirements.txt
-
 ## Utilizzo
 
 Per avviare il programma, seguire i passaggi seguenti:
@@ -95,7 +95,22 @@ Per avviare il programma, seguire i passaggi seguenti:
 python3 main.py
 ```
 
-Al primo avvio, il programma chiederà all'utente di inserire un username. Se l'username inserito è già presente nella lista dei peer, verrà richiesto all'utente di scegliere un nuovo username o riattivare l'username esistente. Se l'username è nuovo, verrà creato un nuovo peer con l'username, l'indirizzo IP e la porta specificati. Verranno anche generate una chiave RSA e una chiave pubblica per il peer.
+Al primo avvio, il programma chiederà all'utente di inserire un username:
+``` 
+Username: Marco
+```
+Se l'username inserito è già presente nella lista dei peer, verrà richiesto all'utente di scegliere un nuovo username:
+```
+Username 'Marco' already exists and is active. Generating a new username...
+Enter a new username: Giacomo
+```
+o riattivare l'username esistente:
+```
+Username 'Marco' already exists but is inactive.
+Do you want to reactivate it? (yes/no):
+yes
+```
+Se l'username è nuovo, verrà creato un nuovo peer con l'username, l'indirizzo IP e la porta specificati. Verranno anche generate una chiave RSA e una chiave pubblica per il peer.
 
 Una volta avviato, il programma avvia due thread separati: uno per la ricezione dei messaggi e l'altro per l'invio dei messaggi.
 
@@ -103,7 +118,16 @@ Per inviare un messaggio, l'utente può semplicemente digitare il testo del mess
 
 Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 
-In caso di necessità l'utente può visualizzare quando desidera l'elenco di questi comandi inserendo come messaggio il comando `!HELP`
+In caso di necessità l'utente può visualizzare quando desidera l'elenco di questi comandi inserendo come messaggio il comando `!HELP`.
+```
+Commands:
+
+!PEERS: show active peers
+!SELECT <username>: select a user for private chat
+!GROUP <group_name>: select (or create) a group for group chat
+!REMOVE <group_name>: delete a group
+!EXIT: exit from the program
+```
 
 ## Test
 

@@ -49,7 +49,7 @@ Il programma utilizza la crittografia RSA per garantire la sicurezza dei messagg
 
 ### 5. Messaggi broadcast
 
-Gli utenti possono inviare messaggi broadcast che vengono recapitati a tutti gli utenti connessi nella rete locale. Questo permette di comunicare con tutti gli utenti contemporaneamente senza dover inviare messaggi individuali.
+Gli utenti possono inviare messaggi broadcast che vengono recapitati a tutti gli altri utenti connessi alla rete. Questo permette di comunicare con tutti gli utenti contemporaneamente senza dover inviare messaggi individuali.
 
 ### 6. Messaggi privati
 
@@ -89,7 +89,7 @@ Il programma gestisce la disconnessione degli utenti in modo robusto. Quando un 
 
 ### 9. Tolleranza ai guasti
 
-Il programma è in grado di sopperire ad eventuali guasti del file JSON e dei peers, in quanto, in caso di guasto del file JSON è presente il file di backup. Nell'ipotesi in cui siano guasti entrambi i file JSON, nonostante non sia più gestibile la registrazione di nuovi peers e/o la creazione di nuovi gruppi, i peers già all'interno della rete possono continuare a comunicare tra di loro senza problemi. Questa continuità della comunicazione avverà anche in caso di guasto di un peer, poiché l'unica conseguenza di tale guasto sarebbe l'impossibilità di raggiungere o comunicare con il peer danneggiato.
+Il programma è in grado di sopperire ad eventuali guasti del file JSON e dei peer, in quanto, in caso di guasto del file JSON è presente il file di backup. Nell'ipotesi in cui siano guasti entrambi i file JSON, nonostante non sia più gestibile la registrazione di nuovi peer e/o la creazione di nuovi gruppi, i peer già all'interno della rete possono continuare a comunicare tra di loro senza problemi. Questa continuità della comunicazione avverà anche in caso di guasto di un peer, poiché l'unica conseguenza di tale guasto sarebbe l'impossibilità di raggiungere o comunicare con il peer danneggiato.
 
 ## Utilizzo
 
@@ -121,9 +121,9 @@ Se l'username è nuovo, verrà creato un nuovo peer con l'username, l'indirizzo 
 
 Una volta avviato, il programma avvia due thread separati: uno per la ricezione dei messaggi e l'altro per l'invio dei messaggi.
 
-Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. Digitando il comando `!PEERS` è possibile visualizzare tutti i peers attivi in quel momento. È possibile inoltre rimuovere gruppi tramite il comando `!REMOVE`.
+Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. Digitando il comando `!PEERS` è possibile visualizzare tutti i peer attivi in quel momento. È possibile inoltre rimuovere gruppi tramite il comando `!REMOVE`.
 
-Per uscire dal programma, l'utente può digitare il comando `!EXIT`; nonostante sia preferibile l'utilizzo di questo comando, il programma gestisce anche l'uscita tramite `Ctrl+C` da terminale. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
+Per uscire dal programma, l'utente può digitare il comando `!EXIT`; nonostante l'utilizzo di questo comando sia preferibile, il programma gestisce anche l'uscita tramite `Ctrl+C` da terminale. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 
 In caso di necessità l'utente può visualizzare quando desidera l'elenco di questi comandi inserendo come messaggio il comando `!HELP`.
 ```
@@ -159,15 +159,15 @@ pytest test.py
 
 ### Sicurezza avanzata
 
-- Utilizzo di una chiave simmetrica per la crittografia dei messaggi: Invece di utilizzare una chiave RSA unica per crittografare i messaggi, si può generare una chiave simmetrica casuale per ciascuna comunicazione tra due peer, in modo da realizzare una crittografia di tipo end-to-end. Questa chiave simmetrica può essere utilizzata per crittografare e decriptare i messaggi scambiati tra i due peer. In questo modo, ogni comunicazione avrà una chiave di crittografia diversa, migliorando la sicurezza complessiva del sistema.
-- Scambio sicuro delle chiavi simmetriche: Per consentire ai peer di scambiarsi le chiavi simmetriche in modo sicuro, si può utilizzare un protocollo di scambio delle chiavi sicuro, come il protocollo Diffie-Hellman o il protocollo di scambio delle chiavi Elliptic Curve Diffie-Hellman (ECDH). Questi protocolli consentono ai peer di stabilire una chiave segreta condivisa senza dover trasmettere direttamente la chiave tramite la rete.
-- Rotazione periodica delle chiavi simmetriche: Per aumentare la sicurezza delle comunicazioni nel tempo, si può implementare una rotazione periodica delle chiavi simmetriche. Ad esempio, si definisce una durata di validità per ogni chiave simmetrica e, dopo un determinato periodo, generare una nuova chiave e utilizzarla per le comunicazioni successive. In questo modo, anche se una chiave viene compromessa, l'impatto sarà limitato al periodo di validità di quella chiave.
-- Implementazione di meccanismi di autenticazione: Oltre alla crittografia dei messaggi, si può considerare l'implementazione di meccanismi di autenticazione per garantire che i messaggi siano inviati e ricevuti solo da peer legittimi. Si possono utilizzare firme digitali basate su algoritmi di crittografia asimmetrica per garantire l'integrità e l'autenticità dei messaggi.
+- Utilizzo di una chiave simmetrica per la crittografia dei messaggi: invece di utilizzare una chiave RSA unica per crittografare i messaggi, si può generare una chiave simmetrica casuale per ciascuna comunicazione tra due peer, in modo da realizzare una crittografia di tipo end-to-end. Questa chiave simmetrica può essere utilizzata per crittografare e decriptare i messaggi scambiati tra i due peer. In questo modo, ogni comunicazione avrà una chiave di crittografia diversa, migliorando la sicurezza complessiva del sistema.
+- Scambio sicuro delle chiavi simmetriche: per consentire ai peer di scambiarsi le chiavi simmetriche in modo sicuro, si può utilizzare un protocollo di scambio delle chiavi sicuro, come il protocollo Diffie-Hellman o il protocollo di scambio delle chiavi Elliptic Curve Diffie-Hellman (ECDH). Questi protocolli consentono ai peer di stabilire una chiave segreta condivisa senza dover trasmettere direttamente la chiave tramite la rete.
+- Rotazione periodica delle chiavi simmetriche: per aumentare la sicurezza delle comunicazioni nel tempo, si può implementare una rotazione periodica delle chiavi simmetriche. Ad esempio, si definisce una durata di validità per ogni chiave simmetrica e, dopo un determinato periodo, generare una nuova chiave e utilizzarla per le comunicazioni successive. In questo modo, anche se una chiave viene compromessa, l'impatto sarà limitato al periodo di validità di quella chiave.
+- Implementazione di meccanismi di autenticazione: oltre alla crittografia dei messaggi, si può considerare l'implementazione di meccanismi di autenticazione per garantire che i messaggi siano inviati e ricevuti solo da peer legittimi. Si possono utilizzare firme digitali basate su algoritmi di crittografia asimmetrica per garantire l'integrità e l'autenticità dei messaggi.
 
 ### Gestione della scalabilità
 
 Gli alberi AVL (Adelson-Velsky e Landis) potrebbero essere una strategia efficace per migliorare la gestione della scalabilità in questo programma:
-- Struttura dati per i peer: Ogni peer può essere rappresentato come un nodo nell'albero, con le informazioni pertinenti come l'indirizzo IP, la porta e lo stato di attività associate al nodo. L'uso di un albero AVL garantisce che l'albero sia bilanciato, il che porta a tempi di ricerca efficienti e riduce la possibilità di congestionamento.
-- Inserimento e rimozione dei peer: Quando un nuovo peer si connette o un peer esistente viene disconnesso, vengono eseguite le operazioni di inserimento o rimozione direttamente nell'albero AVL. L'albero si adatterà automaticamente per mantenere il bilanciamento, garantendo prestazioni ottimali anche con un grande numero di peer.
-- Ricerca e gestione dei peer: Si possono utilizzare le operazioni di ricerca dell'albero AVL per trovare rapidamente le informazioni di un peer specifico. Ad esempio, se si ha bisogno di recuperare le informazioni di un peer dato il suo indirizzo IP, è possibile eseguire una ricerca nell'albero AVL in tempo logaritmico, ottenendo così un accesso rapido alle informazioni desiderate.
-- Bilanciamento automatico: Gli alberi AVL si auto-bilanciano automaticamente dopo ogni operazione di inserimento o rimozione. Ciò garantisce che l'albero mantenga un'altezza bilanciata e che le operazioni di ricerca e aggiornamento siano efficienti, indipendentemente dal numero di peer connessi.
+- Struttura dati per i peer: ogni peer può essere rappresentato come un nodo nell'albero, con le informazioni pertinenti come l'indirizzo IP, la porta e lo stato di attività associate al nodo. L'uso di un albero AVL garantisce che l'albero sia bilanciato, il che porta a tempi di ricerca efficienti e riduce la possibilità di congestionamento.
+- Inserimento e rimozione dei peer: quando un nuovo peer si connette o un peer esistente viene disconnesso, vengono eseguite le operazioni di inserimento o rimozione direttamente nell'albero AVL. L'albero si adatterà automaticamente per mantenere il bilanciamento, garantendo prestazioni ottimali anche con un grande numero di peer.
+- Ricerca e gestione dei peer: si possono utilizzare le operazioni di ricerca dell'albero AVL per trovare rapidamente le informazioni di un peer specifico. Ad esempio, se si ha bisogno di recuperare le informazioni di un peer dato il suo indirizzo IP, è possibile eseguire una ricerca nell'albero AVL in tempo logaritmico, ottenendo così un accesso rapido alle informazioni desiderate.
+- Bilanciamento automatico: gli alberi AVL si auto-bilanciano automaticamente dopo ogni operazione di inserimento o rimozione. Ciò garantisce che l'albero mantenga un'altezza bilanciata e che le operazioni di ricerca e aggiornamento siano efficienti, indipendentemente dal numero di peer connessi.

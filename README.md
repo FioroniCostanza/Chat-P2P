@@ -125,6 +125,7 @@ Commands:
 !PEERS: show active peers
 !SELECT <username>: select a user for private chat
 !GROUP <group_name>: select (or create) a group for group chat
+!GROUP ALL: switch to all users chat
 !REMOVE <group_name>: delete a group
 !EXIT: exit from the program
 ```

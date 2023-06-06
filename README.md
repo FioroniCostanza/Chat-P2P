@@ -72,8 +72,8 @@ Il programma permette agli utenti di creare gruppi di chat, in cui più utenti p
            "Lucia",
            "Riccardo"
          ]
-      }
-   }
+       }
+    }
 ]
 ```
 ### 8. Gestione della disconnessione

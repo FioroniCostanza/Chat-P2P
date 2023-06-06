@@ -116,7 +116,7 @@ Una volta avviato, il programma avvia due thread separati: uno per la ricezione 
 
 Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. Digitando il comando `!PEERS` è possibile visualizzare tutti i peers attivi in quel momento. È possibile inoltre rimuovere gruppi tramite il comando `!REMOVE`.
 
-Per uscire dal programma, l'utente può digitare il comando `!EXIT`; nonostante sia preferibile l'utilizzo di questo comando, il programma gestisce anche l'uscita tramite ctrl+c da terminale. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
+Per uscire dal programma, l'utente può digitare il comando `!EXIT`; nonostante sia preferibile l'utilizzo di questo comando, il programma gestisce anche l'uscita tramite `Ctrl+C` da terminale. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 
 In caso di necessità l'utente può visualizzare quando desidera l'elenco di questi comandi inserendo come messaggio il comando `!HELP`.
 ```

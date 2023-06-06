@@ -180,7 +180,7 @@ class Peer:
                 file.close()
 
     def remove_group(self, name):
-        # Si rimuove un utente o un gruppo dalla lista dei peer
+        # Si rimuove un gruppo dalla lista dei peer
         if name in self.lista_peer:
             if 'members' in self.lista_peer[name]:
                 del self.lista_peer[name]
@@ -338,7 +338,7 @@ class Peer:
                             print("Group not created.")
                     selected_user = None
                 elif body_message.startswith("!REMOVE"):
-                    # Se il messaggio inizia con !REMOVE si rimuove un utente/gruppo
+                    # Se il messaggio inizia con !REMOVE si rimuove un gruppo
                     name = body_message.split(" ")[1]
                     self.remove_group(name)
                     print(f"'{name}' has been removed.")

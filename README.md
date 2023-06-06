@@ -77,6 +77,8 @@ Per inviare un messaggio, l'utente può semplicemente digitare il testo del mess
 
 Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 
+In caso di necessità l'utente può visualizzare quando desidera l'elenco di questi comandi inserendo come messaggio il comando `!HELP`
+
 ## Test
 
 Per verificare il corretto funzionamento del programma, è possibile eseguire una suite di test inclusa nel programma. Per avviare la suite di test, seguire i passaggi seguenti:

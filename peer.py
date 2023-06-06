@@ -181,8 +181,9 @@ class Peer:
 
     def remove_group(self, name):
         # Si rimuove un utente o un gruppo dalla lista dei peer
-        if name in self.lista_peer[name]:
-            del self.lista_peer[name]
+        if name in self.lista_peer:
+            if 'members' in self.lista_peer[name]:
+                del self.lista_peer[name]
             with self.lock:
                 with open(self.file_path, 'w') as file:
                     json.dump(self.lista_peer, file)

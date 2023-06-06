@@ -4,7 +4,10 @@ Questo è un programma di chat peer-to-peer scritto in Python. L'obiettivo princ
 
 ## Requisiti
 
-- Per i dettagli: requirements.txt
+- Python 3.x
+- Pycryptodome
+- Pytest
+- Per dettagli ulteriori: requirements.txt
 
 ## Funzionalità principali
 

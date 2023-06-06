@@ -87,6 +87,10 @@ Il programma permette agli utenti di creare gruppi di chat, in cui più utenti p
 
 Il programma gestisce la disconnessione degli utenti in modo robusto. Quando un utente si disconnette, gli altri utenti vengono notificati della sua disconnessione. Inoltre, ogni 10 peers i dati degli utenti vengono salvati in un file di backup JSON `backup_lista_peer.json` per poter essere ripristinati in caso di perdita del file principale.
 
+### 9. Tolleranza ai guasti
+
+Il programma è in grado di sopperire ad eventuali guasti del file JSON e dei peers, in quanto, in caso di guasto del file JSON è presente il file di backup. Nell'ipotesi in cui siano guasti entrambi i file JSON, nonostante non sia più gestibile la registrazione di nuovi peers e/o la creazione di nuovi gruppi, i peers già all'interno della rete possono continuare a comunicare tra di loro senza problemi. Questa continuità della comunicazione avverà anche in caso di guasto di un peer, poiché l'unica conseguenza di tale guasto sarebbe l'impossibilità di raggiungere o comunicare con il peer danneggiato.
+
 ## Utilizzo
 
 Per avviare il programma, seguire i passaggi seguenti:

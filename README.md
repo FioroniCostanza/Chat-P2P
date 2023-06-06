@@ -99,7 +99,7 @@ Al primo avvio, il programma chiederà all'utente di inserire un username. Se l'
 
 Una volta avviato, il programma avvia due thread separati: uno per la ricezione dei messaggi e l'altro per l'invio dei messaggi.
 
-Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. Digitando il comando `!PEERS` è possibile visualizzare tutti i peers attivi in quel momento. È possibile inoltre rimuovere utenti o gruppi tramite il comando `!REMOVE`.
+Per inviare un messaggio, l'utente può semplicemente digitare il testo del messaggio e premere Invio. Il messaggio può essere un messaggio broadcast, un messaggio privato a un utente specifico o un messaggio di gruppo a un gruppo specifico. L'utente può selezionare un utente o un gruppo utilizzando i comandi `!SELECT` e `!GROUP`. Digitando il comando `!PEERS` è possibile visualizzare tutti i peers attivi in quel momento. È possibile inoltre rimuovere gruppi tramite il comando `!REMOVE`.
 
 Per uscire dal programma, l'utente può digitare il comando `!EXIT`. Se l'utente è in una chat di gruppo, dovrà prima passare alla chat con tutti gli utenti utilizzando il comando `!GROUP ALL`, quindi utilizzare il comando `!EXIT` per uscire completamente.
 

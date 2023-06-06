@@ -148,6 +148,8 @@ Per verificare il corretto funzionamento del programma, è possibile eseguire un
 pytest test.py
 ```
 
+N.B. Si consiglia di eseguire la suite di test prima di effettuare un qualunque utilizzo del sistema di chat poiché, per esigenze di progettazione (in particolar modo la rigenerazione di un nuovo username nel caso in cui fosse già presente), prima di eseguire i test, la suite elimina sia il file `lista_peer.json` che il file di backup `lista_peer.json`.
+
 ## Note
 
 - I messaggi vengono crittografati utilizzando la crittografia RSA, in particolare il cifrario asimettrico PKCS1_OAEP. Il primo peer che crea la rete genera e salva una chiave RSA nel file `key.pem` che viene poi richiamato da tutti i membri della rete per criptare e decriptare i messaggi scambiati.

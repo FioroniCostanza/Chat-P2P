@@ -252,6 +252,7 @@ class Peer:
                     for i in range(len(received_members)):
                         received_members[i] = received_members[i].strip(" '")
                     self.lista_peer[received_group] = {'members': received_members}
+                    print(f"New group created: ''{received_group}'' with members: {received_members}")
                 elif message_received.startswith("!EXIT"):
                     msg = message_received.split(": ")[1]
                     print(msg)
@@ -283,12 +284,22 @@ class Peer:
                     else:
                         print("You are currently in a group. Use !GROUP ALL to switch to all users. After that use !EXIT if you want.")
                 elif body_message.startswith("!PEERS"):
-                    # Se il messaggio inizia con !PEERS si stampa la lista dei peer
+                    # Se il messaggio inizia con !PEERS si stampa la lista dei peer attivi
                     active_peers = []
-                    for i in self.lista_peer:
-                        if bool(self.lista_peer[i]['is_active']) == True:
-                            active_peers.append(i)
-                    print(f'Active peers: {active_peers}')
+                    for user, user_data in self.lista_peer.items():
+                        if user != self.username and 'ip' in user_data and 'port' in user_data:
+                            if bool(self.lista_peer[user]['is_active']):
+                                active_peers.append(user)
+                    print(f'Active peers (excluding you): {active_peers}')
+                elif body_message.startswith("!HELP"):
+                    # Se il messaggio inizia con !HELP si stampa la lista dei comandi
+                    print("\n")
+                    print("Commands:\n")
+                    print("!PEERS: show active peers")
+                    print("!SELECT <username>: select a user for private chat")
+                    print("!GROUP <group_name>: select (or create) a group for group chat")
+                    print("!REMOVE <group_name>: delete a group")
+                    print("!EXIT: exit from the program")
                 elif body_message.startswith("!SELECT"):
                     # Se il messaggio inizia con !SELECT si seleziona un utente per la chat privata
                     selected_user = body_message.split(" ")[1]

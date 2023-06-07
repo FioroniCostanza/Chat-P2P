@@ -173,3 +173,6 @@ Gli alberi AVL (Adelson-Velsky e Landis) potrebbero essere una strategia efficac
 - Inserimento e rimozione dei peer: quando un nuovo peer si connette o un peer esistente viene disconnesso, vengono eseguite le operazioni di inserimento o rimozione direttamente nell'albero AVL. L'albero si adatterà automaticamente per mantenere il bilanciamento, garantendo prestazioni ottimali anche con un grande numero di peer.
 - Ricerca e gestione dei peer: si possono utilizzare le operazioni di ricerca dell'albero AVL per trovare rapidamente le informazioni di un peer specifico. Ad esempio, se si ha bisogno di recuperare le informazioni di un peer dato il suo indirizzo IP, è possibile eseguire una ricerca nell'albero AVL in tempo logaritmico, ottenendo così un accesso rapido alle informazioni desiderate.
 - Bilanciamento automatico: gli alberi AVL si auto-bilanciano automaticamente dopo ogni operazione di inserimento o rimozione. Ciò garantisce che l'albero mantenga un'altezza bilanciata e che le operazioni di ricerca e aggiornamento siano efficienti, indipendentemente dal numero di peer connessi.
+
+Esempio di bilanciamento con albero AVL:
+![image](https://github.com/FioroniCostanza/Chat-P2P/assets/117631640/b87453e3-344a-486f-9391-032c234da242) 

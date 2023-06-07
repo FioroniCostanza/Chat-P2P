@@ -266,6 +266,9 @@ class Peer:
         while self.is_active and not should_exit:
             try:
                 message_sent = input("")  # Messaggio da inviare
+                if len(message_sent) == 0:
+                    print("You can't send an empty message. Try again. \n")
+                    message_sent = input("")
                 message_sent = self.split_message_into_blocks(message_sent)  # Si divide il messaggio in blocchi
                 body_message = message_sent[0].split("###")[1]  # Si prende il messaggio del primo blocco da inviare
                 if body_message.startswith("!EXIT"):

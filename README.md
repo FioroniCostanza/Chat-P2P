@@ -174,5 +174,8 @@ Gli alberi AVL (Adelson-Velsky e Landis) potrebbero essere una strategia efficac
 - Ricerca e gestione dei peer: si possono utilizzare le operazioni di ricerca dell'albero AVL per trovare rapidamente le informazioni di un peer specifico. Ad esempio, se si ha bisogno di recuperare le informazioni di un peer dato il suo indirizzo IP, è possibile eseguire una ricerca nell'albero AVL in tempo logaritmico, ottenendo così un accesso rapido alle informazioni desiderate.
 - Bilanciamento automatico: gli alberi AVL si auto-bilanciano automaticamente dopo ogni operazione di inserimento o rimozione. Ciò garantisce che l'albero mantenga un'altezza bilanciata e che le operazioni di ricerca e aggiornamento siano efficienti, indipendentemente dal numero di peer connessi.
 
-Esempio di bilanciamento con albero AVL:
-![image](https://github.com/FioroniCostanza/Chat-P2P/assets/117631640/b87453e3-344a-486f-9391-032c234da242) 
+Esempio di bilanciamento con albero AVL: 
+
+
+<img width="605" alt="image" src="https://github.com/FioroniCostanza/Chat-P2P/assets/117631640/2ea04a03-f89e-45ae-8a3d-0201ca95cc71">
+
